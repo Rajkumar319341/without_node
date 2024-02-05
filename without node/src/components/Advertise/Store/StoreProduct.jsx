@@ -5,10 +5,13 @@ import Select from 'react-select';
 import './StoreProduct.css';
 
 
+
 const StoreProduct = () => {
     const navigate = useNavigate();
     const [brandValues, setBrandValues] = useState([""]);
     const [materialValues, setMaterialValues] = useState([""]);
+    const storePhone = localStorage.getItem('storePhoneNumber');
+    // console.log("Phone number fetched from local storage:",storePhone)
 
     const addBrandValue = () => {
         setBrandValues([...brandValues, ""]);
@@ -19,7 +22,7 @@ const StoreProduct = () => {
     };
     const [formData, setFormData] = useState({
         id: 0,
-        store_phone_number: '',
+        store_phone_number: storePhone,
         product_name: '',
         product_description: '',
         gender: [""],
@@ -33,20 +36,45 @@ const StoreProduct = () => {
         warranty: "",
         warranty_duration: "",
         created_date: "",
-        updated_date: "",
-        image_ids: [""]
+        updated_date: ""
     });
-    
 
     const handleInputChange = (e) => {
         const { id, value } = e.target;
+        switch (id) {
+            case 'price':
+            case 'product_count':
+                if (!/^\d*\.?\d*$/.test(value)) {
+                    alert("Only Integer Values are allowed")
+                    return;
+                }
+                break;
+
+            case 'discount':
+                const discountValue = parseFloat(value);
+                if (isNaN(discountValue) || discountValue < 1 || discountValue > 100) {
+                    alert("Only values from 1 to 100 are allowed for Discount");
+                    return;
+                }
+                break;
+
+            default:
+                break;
+        }
+
         setFormData((prevData) => ({
             ...prevData,
             [id]: value,
         }));
     };
 
+
     const handleListChange = (listName, selectedOptions) => {
+        if (!Array.isArray(selectedOptions)) {
+            console.error("Selected options is not an array:", selectedOptions);
+            return;
+        }
+
         setFormData((prevData) => {
             const updatedList = selectedOptions.map((option) => option.value);
             return {
@@ -55,7 +83,6 @@ const StoreProduct = () => {
             };
         });
     };
-
 
     const handleAddItem = (e, index, listName) => {
         const newValue = e.target.value;
@@ -66,16 +93,26 @@ const StoreProduct = () => {
                 updatedValues[index] = newValue;
                 return updatedValues;
             });
+            setFormData((prevData) => ({
+                ...prevData,
+                brand: [...prevData.brand.slice(0, index), newValue, ...prevData.brand.slice(index + 1)],
+            }));
         } else if (listName === 'material') {
             setMaterialValues((prevValues) => {
                 const updatedValues = [...prevValues];
                 updatedValues[index] = newValue;
                 return updatedValues;
             });
+            setFormData((prevData) => ({
+                ...prevData,
+                material: [...prevData.material.slice(0, index), newValue, ...prevData.material.slice(index + 1)],
+            }));
         }
+
+        // console.log('brandValues:', brandValues);
+        // console.log('materialValues:', materialValues);
+        // console.log('formData:', formData);
     };
-
-
 
     const handleRemoveItem = (index, listName) => {
         if (listName === 'brand') {
@@ -93,11 +130,32 @@ const StoreProduct = () => {
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        console.log('Sending data to API:', formData);
+        try {
+            const response = await fetch('https://bnb.care4edu.com/bnb/storeProduct', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Basic ' + btoa('AllboutiqueNbeautique:9IOLDM5S7A8QSQW0E1R2T6Y4U8I3O'),
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (response.ok) {
+                alert('Submitted Successfully');
+                console.log('Data successfully sent to API:', formData);
+            } else {
+                alert('Failed to submit. Please try again.');
+                console.error('Failed to submit data to API:', response.status, response.statusText);
+            }
+        } catch (error) {
+            alert('An error occurred while submitting. Please try again.');
+            console.error('Error submitting data:', error);
+        }
     };
+
 
     const genderOptions = [
         { value: 'male', label: 'Male' },
@@ -151,7 +209,7 @@ const StoreProduct = () => {
                         value={formData.product_description}
                         onChange={handleInputChange}
                     />
-                    <TextField
+                    {/* <TextField
                         id="store_phone_number"
                         label="Store Phone Number"
                         required
@@ -160,9 +218,10 @@ const StoreProduct = () => {
                         value={formData.store_phone_number}
                         onChange={handleInputChange}
 
-                    />
+                    /> */}
 
                     <TextField
+                        required
                         id="categories"
                         label="Categories"
                         margin="normal"
@@ -172,9 +231,9 @@ const StoreProduct = () => {
                     />
 
                     <TextField
+                        required
                         id="price"
                         label="Price"
-                        required
                         margin='normal'
                         size='small'
                         value={formData.price}
@@ -182,33 +241,31 @@ const StoreProduct = () => {
 
                     />
                     <Select
+                        required
                         isMulti
                         id="gender"
                         options={genderOptions}
                         value={genderOptions.filter((option) => formData.gender.includes(option.value))}
                         onChange={(selectedOptions) => handleListChange('gender', selectedOptions)}
                         placeholder="Select Gender"
-                        
-
 
                     />
 
                     {brandValues.map((value, index) => (
                         <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                             <TextField
-                                id={`brand-${index}`}
-                                type="text"
+                                label="Brand"
+                                required
+                                margin='normal'
+                                size='small'
                                 value={value}
                                 onChange={(e) => handleAddItem(e, index, 'brand')}
-                                margin="normal"
-                                size="small"
-                                label={`Brand ${index + 1}`}
                             />
                             {index === brandValues.length - 1 && (
                                 <>
-                                    <button onClick={addBrandValue} style={{ marginLeft: '10px' }}>+</button>
+                                    <button type="button" onClick={addBrandValue} style={{ marginLeft: '10px' }}>+</button>
                                     {brandValues.length > 1 && (
-                                        <button onClick={() => handleRemoveItem(index, 'brand')} style={{ marginLeft: '10px' }}>-</button>
+                                        <button type="button" onClick={() => handleRemoveItem(index, 'brand')} style={{ marginLeft: '10px' }}>-</button>
                                     )}
                                 </>
                             )}
@@ -218,29 +275,25 @@ const StoreProduct = () => {
                     {materialValues.map((value, index) => (
                         <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                             <TextField
-                                id={`material-${index}`}
-                                type="text"
+                                label="Material"
+                                required
+                                margin='normal'
+                                size='small'
                                 value={value}
                                 onChange={(e) => handleAddItem(e, index, 'material')}
-                                margin="normal"
-                                size="small"
-                                label={`Material ${index + 1}`}
                             />
                             {index === materialValues.length - 1 && (
                                 <>
-                                    <button onClick={addMaterialValue} style={{ marginLeft: '10px' }}>+</button>
+                                    <button type="button" onClick={addMaterialValue} style={{ marginLeft: '10px' }}>+</button>
                                     {materialValues.length > 1 && (
-                                        <button onClick={() => handleRemoveItem(index, 'material')} style={{ marginLeft: '10px' }}>-</button>
+                                        <button type="button" onClick={() => handleRemoveItem(index, 'material')} style={{ marginLeft: '10px' }}>-</button>
                                     )}
                                 </>
                             )}
                         </div>
                     ))}
-
-
-
-
                     <Select
+                        required
                         isMulti
                         id="size"
                         options={sizeOptions}
@@ -314,7 +367,20 @@ const StoreProduct = () => {
                     />
 
 
-                    <button type="submit">Submit</button>
+                    <button
+                        type="submit"
+                        // onClick={handleSubmit}
+                        style={{
+                            width: '100px',
+                            height: '50px',
+                            marginTop: '20px',
+                            backgroundColor: '#0199FF',
+                            color: 'black',
+                            borderRadius: '8px',
+                        }}
+                    >
+                        Submit
+                    </button>
                 </form>
             </Stack>
         </div>

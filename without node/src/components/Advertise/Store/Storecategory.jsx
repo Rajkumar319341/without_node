@@ -14,6 +14,7 @@ export default function Storecategory() {
   const storeDesc= localStorage.getItem('specializationDescription')
   const [category, setCategory] = useState([]);
   const [selectedcategory, setSelectedCategory] = useState([]);
+  console.log(storePhone);
   const navigate = useNavigate();
   useEffect(() => {
     const fetchData = async () => { 

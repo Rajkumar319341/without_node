@@ -11,6 +11,7 @@ import Storecategory from "./components/Advertise/Store/Storecategory";
 import FileUpload from "./components/Advertise/Store/FileUpload";
 import { Toaster } from 'react-hot-toast';
 import StoreProduct from "./components/Advertise/Store/StoreProduct";
+import StoreProductImage from "./components/Advertise/Store/StoreProductImage";
 function App() {
   return (
     <>
@@ -25,6 +26,7 @@ function App() {
             <Route  path="/Storespecialization" element={<StoreSpecialization/>}/>
             <Route path="/Storecategory" element={<Storecategory/>}/> 
             <Route path="/FileUpload" element={<FileUpload/>}/> 
+            <Route path="/store-product-image" element={<StoreProductImage/>}/>
             <Route path="/StoreProducts" element={<FileUpload/>}/> 
             <Route path="/TermsAndConditions" element={<TermsAndConditions/>}/>
             </Routes>

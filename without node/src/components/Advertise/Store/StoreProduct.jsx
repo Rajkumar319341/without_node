@@ -1,17 +1,22 @@
 import { Stack, TextField, Typography, MenuItem, Button, } from '@mui/material';
 import { useNavigate } from 'react-router-dom'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Select from 'react-select';
 import './StoreProduct.css';
-
-
 
 const StoreProduct = () => {
     const navigate = useNavigate();
     const [brandValues, setBrandValues] = useState([""]);
     const [materialValues, setMaterialValues] = useState([""]);
+    const [productStorageName, setProductStorageName] = useState("");
     const storePhone = localStorage.getItem('storePhoneNumber');
     // console.log("Phone number fetched from local storage:",storePhone)
+
+    useEffect(() => {
+        localStorage.setItem('productStorageName', productStorageName);
+    }, [productStorageName]);
+
+    
 
     const addBrandValue = () => {
         setBrandValues([...brandValues, ""]);
@@ -141,11 +146,13 @@ const StoreProduct = () => {
                     'Authorization': 'Basic ' + btoa('AllboutiqueNbeautique:9IOLDM5S7A8QSQW0E1R2T6Y4U8I3O'),
                 },
                 body: JSON.stringify(formData),
-            });
+            })
+           
 
             if (response.ok) {
                 alert('Submitted Successfully');
                 console.log('Data successfully sent to API:', formData);
+                navigate('/store-product-image')
             } else {
                 alert('Failed to submit. Please try again.');
                 console.error('Failed to submit data to API:', response.status, response.statusText);
@@ -197,7 +204,13 @@ const StoreProduct = () => {
                         size='small'
                         value={formData.product_name}
                         autoFocus
-                        onChange={handleInputChange}
+                        onChange={(e) => {
+                            setFormData((prevData) => ({
+                                ...prevData,
+                                product_name: e.target.value,
+                            }));
+                            setProductStorageName(e.target.value);
+                        }}
                     />
                     <TextField
                         id="product_description"
@@ -209,17 +222,7 @@ const StoreProduct = () => {
                         value={formData.product_description}
                         onChange={handleInputChange}
                     />
-                    {/* <TextField
-                        id="store_phone_number"
-                        label="Store Phone Number"
-                        required
-                        margin='normal'
-                        size='small'
-                        value={formData.store_phone_number}
-                        onChange={handleInputChange}
-
-                    /> */}
-
+                
                     <TextField
                         required
                         id="categories"

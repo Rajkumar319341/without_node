@@ -4,14 +4,15 @@ import UploadFileIcon from '@mui/icons-material/UploadFile';
 import Button from '@mui/material/Button';
 import StoreRegister from './StoreRegister';
 
-const username = 'bnb_api';
-const password = 'QSJNVBSNSBJHSTUHJSISIJSSEV';
+// const username = 'bnb_api';
+// const password = 'QSJNVBSNSBJHSTUHJSISIJSSEV';
 
 export default function FileUpload() {
 
     const categories = localStorage.getItem('selectedCategories');
     console.log(`categories${categories}`);
-    const storePhone = localStorage.getItem('storePhoneNumber')
+    const storePhone = localStorage.getItem('storePhoneNumber');
+    console.log("Phone no:", storePhone)
     const [images, setImages] = useState([]);
     const [adverId, setAdverId] = useState('');
     const [idGenerated, setIdGenerated] = useState(false);
@@ -30,21 +31,30 @@ export default function FileUpload() {
             validFiles.push(file);
 
         });
-
+        console.log("Valid files:", validFiles);
         setImages((prevImages) => [...prevImages, ...validFiles]);
     };
 
     const handleFileUpload = async () => {
         if (images.length > 0) {
-            const form = new FormData();
-
-            form.append('phone', storePhone);
-            form.append('category', categories || ''); // Ensure categories is not null
-
+            const form= new FormData();
+            // console.log("Type of form:",form.type)
+            console.log("Phone number to store:",storePhone)
+            form.append('phone',storePhone);
+            console.log("Form after append phone no:",form)
+            form.append('category',categories || ''); 
+            console.log("Images before upload:", images); 
+            // images.forEach((img, index) => {
+            //     form.append('files',img); 
+            //     console.log("Image Path:", img);
+            // });
             images.forEach((img, index) => {
-                form.append('files', img, img.name); // Use img.name for filename
+                form.append('file', img); 
+                console.log("Image Path:", img);
             });
-
+            
+    
+            console.log("Form Data before fetch:", form);
             try {
                 const response = await fetch(
                     `https://bnb.care4edu.com/bnb/images/store/multiple?phone=${storePhone}&category=${categories || ''}`,
@@ -52,19 +62,25 @@ export default function FileUpload() {
                         method: 'POST',
                         body: form,
                         headers: {
-                            Authorization: `Basic ${btoa(`${username}:${password}`)}`,
+                            'Authorization': 'Basic ' + btoa('AllboutiqueNbeautique:9IOLDM5S7A8QSQW0E1R2T6Y4U8I3O'),
                         },
                     }
                 );
-
+    
                 console.log(response.status);
-                console.log(await response.text()); // Log the textual representation of the response
-
-                if (!response.ok) {
+                const responseBody = await response.json(); 
+                console.log("Response body:",responseBody);
+                console.log("Response body:", responseBody.status); 
+    
+                if (response.ok) {
+                    alert("Images added Successfully")
+                    
+                }else{
                     throw new Error(`Failed to upload images. Status: ${response.status}`);
+                   
                 }
-
-                // Handle success
+    
+               
                 setOpenModal(true);
                 setAdverId('');
                 setIdGenerated(false);
@@ -72,16 +88,14 @@ export default function FileUpload() {
                 console.error('Error uploading images:', error);
                 alert(`Error uploading images: ${error.message}`);
             } finally {
-                // Close modal and reset images regardless of success or failure
+               
                 setImages([]);
             }
         } else {
             console.warn('Please select images before uploading.');
         }
     };
-
-
-
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
 

@@ -171,9 +171,9 @@ const StoreProduct = () => {
     ];
 
     const sizeOptions = [
-        { value: 'small', label: 'Small' },
-        { value: 'medium', label: 'Medium' },
-        { value: 'large', label: 'Large' },
+        { value: 'small', label: 'S' },
+        { value: 'medium', label: 'M' },
+        { value: 'large', label: 'L' },
         { value: 'xl', label: 'XL' },
     ];
 
@@ -193,7 +193,7 @@ const StoreProduct = () => {
                     padding: '20px',
                     backgroundColor: 'white',
                     border: '5px solid #ccc',
-                    width: '400px',
+                    // width: '400px',
                     margin: '0 auto',
                 }}>
                     <TextField
@@ -255,7 +255,7 @@ const StoreProduct = () => {
                     />
 
                     {brandValues.map((value, index) => (
-                        <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                        <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' ,backgroundColor:"white"}}>
                             <TextField
                                 label="Brand"
                                 required

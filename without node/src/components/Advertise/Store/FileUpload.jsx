@@ -3,6 +3,7 @@ import { useState } from 'react';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import Button from '@mui/material/Button';
 import StoreRegister from './StoreRegister';
+import './File_Upload.css';
 
 // const username = 'bnb_api';
 // const password = 'QSJNVBSNSBJHSTUHJSISIJSSEV';
@@ -101,9 +102,10 @@ export default function FileUpload() {
 
     };
 
+
     return (
-        <form onSubmit={handleSubmit} style={{
-            marginTop: '3vh',
+        <form className='fileupload_form' onSubmit={handleSubmit} style={{
+            marginTop: '4vh',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -112,7 +114,7 @@ export default function FileUpload() {
             padding: '20px',
             backgroundColor: 'white',
             border: '5px solid #ccc',
-            width: '500px',
+            // width: '500px',
             margin: '0 auto',
         }}>
             <div style={{ marginTop: '10px' }}>
@@ -120,6 +122,7 @@ export default function FileUpload() {
                     Upload Images <UploadFileIcon fontSize='large' />
                 </label>
                 <input type='file'
+                className='file_input'
                     name='file'
                     onChange={handleImageChange}
                     multiple

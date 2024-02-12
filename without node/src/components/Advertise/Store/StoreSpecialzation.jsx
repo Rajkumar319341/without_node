@@ -2,6 +2,7 @@ import { TextField } from '@mui/material';
 import React from 'react'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './Store_Specialization.css';
 
 
 const StoreSpecialization = () => {
@@ -55,7 +56,7 @@ const StoreSpecialization = () => {
         <div style={{ marginTop: "50px", marginBottom: "50px" }}>
 
             <h2 style={{ textAlign: "center" }}>Your Specialization</h2>
-            <form 
+            <form className='specialization_form'
             onSubmit={handleSubmit}
             style={{ marginTop: '2vh', // Adjust top margin for vertical centering
                         display: 'flex',
@@ -66,7 +67,7 @@ const StoreSpecialization = () => {
                         padding: '20px', // Adjust padding for spacing
                         backgroundColor: 'white',
                         border: '5px solid #ccc',
-                        width: '400px',
+                        // width: '400px',
                         margin: '0 auto', 
                        }} >
 

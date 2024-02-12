@@ -20,6 +20,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
 import { Link } from 'react-router-dom';
+import './Advertise.css'
 
 const defaultTheme = createTheme();
 
@@ -289,9 +290,9 @@ export default function Advertise() {
                 />
               </Grid> */}
               <br />
-              <div style={{ marginLeft: "16px", marginTop: "10px" }}>
+              <div className='advertise_upload' style={{ marginLeft: "15px", marginTop: "10px" }}>
                 <label style={{ textAlign: "center", marginTop: "1.5rem", fontFamily: "monospace" }}>Upload Ad Image <UploadFileIcon fontSize='large' /></label>
-                <input type="file" name='file' onChange={handleImageChange} required style={{ border: "2px solid ", padding: "1.5rem", borderStyle: "dotted", borderRadius: "10px" }} placeholder='upload' />
+                <input className='advertise_choosefile' type="file"  name='file' onChange={handleImageChange} required style={{ border: "2px solid ", padding: "1.5rem", borderStyle: "dotted", borderRadius: "10px" }} placeholder='upload' />
               </div>
               {/* <Button
                 type="button"
@@ -303,11 +304,11 @@ export default function Advertise() {
                 >
                 Upload Image 
               </Button> */}
-              <Grid item >
+              <Grid item xs={12}>
                 <FormControlLabel
                   control={<Checkbox value="allowExtraEmails" color="primary" required />}
                   label={
-                    <span >
+                    <span>
                       I Agree to the  { }
                       <Link to='/TermsAndConditions'>
                         Terms And Conditions.</Link>
@@ -315,7 +316,11 @@ export default function Advertise() {
               </Grid>
             </Grid>
             {idGenerated && idGenerated ? <></> : <Button type="submit"
-              fullWidth
+              // fullWidth
+
+
+              
+              className='advertise_button'
               variant="contained"
               color='secondary'
               sx={{ mt: 3, mb: 2 }}
@@ -343,6 +348,3 @@ export default function Advertise() {
     </div>
   );
 } 
-// '@media (max-width: 950px)': {
-//   border: 'none', // Adjust border for smaller screens
-// },

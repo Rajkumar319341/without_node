@@ -1,15 +1,14 @@
-import * as React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import Button from '@mui/material/Button';
+import { Link } from 'react-router-dom';
+import './StoreProductImage.css';
 
 export default function StoreProductImage() {
-    // const categories = localStorage.getItem('selectedCategories');
     const storePhone = localStorage.getItem('storePhoneNumber');
-    console.log("Phone Number:",storePhone)
-    const productName=localStorage.getItem('productStorageName');
-    console.log("Product Name:",productName)
+    const productName = localStorage.getItem('productStorageName');
     const [images, setImages] = useState([]);
+    const [showPopup, setShowPopup] = useState(false);
 
     const handleImageChange = (e) => {
         let files = Array.from(e.target.files);
@@ -34,7 +33,6 @@ export default function StoreProductImage() {
         }
     
         const formData = new FormData();
-        console.log("Phone Number is:",storePhone)
         formData.append('storePhone', storePhone);
         formData.append('productName', productName || '');
         images.forEach((image, index) => {
@@ -53,6 +51,7 @@ export default function StoreProductImage() {
             if (response.ok) {
                 alert("Images uploaded successfully.");
                 setImages([]);
+                setShowPopup(true); 
             } else {
                 alert("Failed to upload images. Please try again.");
                 console.error('Failed to upload images:', response.status, response.statusText);
@@ -62,51 +61,95 @@ export default function StoreProductImage() {
             console.error('Error uploading images:', error);
         }
     };
-    
 
     return (
-        <form onSubmit={(e) => e.preventDefault()} style={{
-            marginTop: '3vh',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            borderRadius: '8px',
-            boxShadow: '0px 10px 10px',
-            padding: '20px',
-            backgroundColor: 'white',
-            border: '5px solid #ccc',
-            width: '500px',
-            margin: '0 auto',
-        }}>
-            <div style={{ marginTop: '10px' }}>
-                <label style={{ textAlign: 'center', fontFamily: 'monospace' }}>
-                    Upload Images <UploadFileIcon fontSize='large' />
-                </label>
-                <input type='file'
-                    name='file'
-                    onChange={handleImageChange}
-                    multiple
-                    required
-                    style={{
-                        border: '2px solid ',
-                        padding: '1.5rem',
-                        borderStyle: 'dotted',
-                        borderRadius: '10px'
-                    }}
-                    placeholder='upload' />
-            </div>
+        <div style={{ position: 'relative', width: '100%' }}>
+                    <br></br>
 
-            <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
-                {images.map((file, index) => (
-                    <div key={index} style={{ margin: '5px', position: 'relative' }}>
-                        <img src={URL.createObjectURL(file)} alt={`Image ${index}`} style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '5px' }} />
-                    </div>
-                ))}
-            </div>
+            <form onSubmit={(e) => e.preventDefault()} style={{
+                marginTop: '3vh',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                borderRadius: '8px',
+                boxShadow: '0px 10px 10px',
+                padding: '20px',
+                backgroundColor: 'white',
+                border: '5px solid #ccc',
+                maxWidth: '500px',
+                margin: '0 auto',
+                width: '90%',
+            }}>
+                <div style={{ marginTop: '10px' }}>
+                    <label style={{ textAlign: 'center', fontFamily: 'monospace' }}>
+                        Upload Images <UploadFileIcon fontSize='large' />
+                    </label>
+                    <input type='file'
+                        name='file'
+                        onChange={handleImageChange}
+                        multiple
+                        required
+                        style={{
+                            border: '2px solid ',
+                            padding: '1.5rem',
+                            borderStyle: 'dotted',
+                            borderRadius: '10px',
+                            width: '100%',
+                        }}
+                        placeholder='upload' />
+                </div>
 
-            <Button type='button' onClick={handleFileUpload} fullWidth variant='contained' color='secondary' style={{ margin: '1.9rem', width: '200px' }}>
-                Upload Images
-            </Button>
-        </form>
+                <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
+                    {images.map((file, index) => (
+                        <div key={index} style={{ margin: '5px', position: 'relative' }}>
+                            <img src={URL.createObjectURL(file)} alt={`Image ${index}`} style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '5px' }} />
+                        </div>
+                    ))}
+                </div>
+
+                <Button  className="upload_image" type='button' onClick={handleFileUpload} fullWidth variant='contained' color='secondary' style={{ margin: '1.9rem', width: '100%' }}>
+                    Upload Images
+                </Button>
+            </form>
+
+            
+            {showPopup && (
+                <div style={{
+                    position: 'fixed',
+                    top: '0',
+                    left: '0',
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
+                    zIndex: '9998'
+                }}></div>
+            )}
+
+            {showPopup && (
+                <div style={{
+                    position: 'fixed',
+                    top: '50%',
+                    left: '50%',
+                    height:'12rem',
+                    width:'80%',
+                    maxWidth: '300px',
+                    transform: 'translate(-50%, -50%)',
+                    backgroundColor: 'white',
+                    padding: '20px',
+                    borderRadius: '10px',
+                    boxShadow: '0px 10px 10px rgba(0, 0, 0, 0.1)',
+                    zIndex: '9999'
+                }}>
+                    <h5>CLICK HERE TO ADD  MORE</h5>
+                    <h5> PRODUCTS</h5>
+                    <br></br>
+                    <br></br>
+                    <Link to='/StoreProduct'>
+                    <Button  variant='contained' color='secondary' >ADD  +</Button>
+                    </Link>
+                  
+                </div> 
+            )}
+        </div>
     );
 }

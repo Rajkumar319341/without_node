@@ -3,6 +3,7 @@ import { Stack, TextField } from '@mui/material'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
+import './Store_Register.css';
 
 const StoreRegister = () => {
     const navigate = useNavigate()
@@ -64,7 +65,7 @@ const StoreRegister = () => {
             <Stack>
                 <h5 style={{ textAlign: 'center', color: 'black', margin: '20px' }}>STORE REGISTRATION</h5>
 
-                <form onSubmit={handleSubmit}
+                <form className="register_form" onSubmit={handleSubmit}
                     style={{
                         marginTop: '2vh', // Adjust top margin for vertical centering
                         display: 'flex',

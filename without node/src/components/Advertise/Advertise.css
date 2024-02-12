@@ -1,0 +1,14 @@
+@media (max-width:1200px){
+    .advertise_upload{
+        width: 300px;
+    }
+    .advertise_choosefile{
+        width: 300px;
+    }
+    
+}
+@media (min-width:1200px){
+    .advertise_button{
+        width: 200px;
+    }
+}
